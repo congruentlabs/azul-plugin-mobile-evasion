@@ -1,3 +1,4 @@
 ca-certificates
 git
+libmagic-dev
 openssh-client
