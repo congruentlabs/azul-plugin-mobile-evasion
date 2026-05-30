@@ -57,9 +57,9 @@ source = "vcs"
 
 [tool.hatch.version.raw-options]
 version_scheme = "only-version"
-
-[tool.hatch.version.fallback]
-version = "0.0.0"
+# Builds without VCS metadata (e.g. the Docker image, which excludes .git) fall back
+# to this version instead of failing; tagged git builds still derive the real version.
+fallback_version = "0.0.0"
 
 [tool.hatch.build.targets.wheel]
 packages = ["azul_plugin_mobile_evasion"]
