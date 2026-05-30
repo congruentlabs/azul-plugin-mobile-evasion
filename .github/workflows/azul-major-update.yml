@@ -1,0 +1,102 @@
+name: Azul Major Dependency Update
+
+on:
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+  repository_dispatch:
+    types:
+      - azul-release
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: azul-major-update
+  cancel-in-progress: false
+
+jobs:
+  check:
+    name: Check for Azul major release
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        run: python -m pip install uv
+
+      - name: Check latest public Azul runner major
+        id: check
+        shell: bash
+        run: |
+          python <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          import re
+          import tomllib
+          import urllib.request
+
+          def major(version: str) -> int:
+              match = re.match(r"^(\d+)\.", version)
+              if not match:
+                  raise ValueError(f"Unsupported version format: {version}")
+              return int(match.group(1))
+
+          with open("uv.lock", "rb") as f:
+              lock = tomllib.load(f)
+
+          current = None
+          for package in lock["package"]:
+              if package["name"] == "azul-runner":
+                  current = package["version"]
+                  break
+
+          if current is None:
+              raise RuntimeError("uv.lock does not contain azul-runner")
+
+          with urllib.request.urlopen("https://pypi.org/pypi/azul-runner/json", timeout=30) as response:
+              payload = json.load(response)
+
+          versions = []
+          for version in payload["releases"]:
+              if re.match(r"^\d+\.\d+\.\d+$", version):
+                  versions.append(version)
+
+          latest = sorted(versions, key=lambda v: tuple(int(part) for part in v.split(".")))[-1]
+          update = major(latest) > major(current)
+
+          print(f"current={current}")
+          print(f"latest={latest}")
+          print(f"update={'true' if update else 'false'}")
+          PY
+
+      - name: Update lockfile for new Azul major
+        if: steps.check.outputs.update == 'true'
+        run: |
+          python -m uv lock --upgrade-package azul-runner
+
+      - name: Create pull request
+        if: steps.check.outputs.update == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: dependency/azul-runner-${{ steps.check.outputs.latest }}
+          delete-branch: true
+          title: "Update Azul runner to ${{ steps.check.outputs.latest }}"
+          commit-message: "Update Azul runner to ${{ steps.check.outputs.latest }}"
+          body: |
+            A new major `azul-runner` release is available.
+
+            Current locked version: `${{ steps.check.outputs.current }}`
+            Latest public version: `${{ steps.check.outputs.latest }}`
+
+            This PR updates `uv.lock` for review. Docker images will be built and published by the Docker workflow after merge.
+          labels: |
+            dependencies
+            azul-major

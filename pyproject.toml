@@ -1,0 +1,116 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "azul-plugin-mobile-evasion"
+description = "Detects mobile anti-analysis and environment-evasion indicators in Android and iOS app packages."
+dynamic = ["version"]
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [
+  { name = "Azul" },
+]
+requires-python = ">=3.12"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Intended Audience :: Developers",
+    "Topic :: Security",
+]
+dependencies = [
+    "azul-bedrock>=10.0.45",
+    "azul-runner>=10.0.55",
+]
+
+[project.scripts]
+azul-plugin-mobile-evasion = "azul_plugin_mobile_evasion.main:main"
+
+[project.urls]
+Documentation = "https://australiancybersecuritycentre.github.io/azul/"
+Repository = "https://github.com/congruentlabs/azul-plugin-mobile-evasion"
+
+[tool.uv]
+package = true
+exclude-newer = "1 week"
+exclude-newer-package = { azul-bedrock = false, azul-runner = false }
+
+[dependency-groups]
+dev = [
+    "azul-runner[test-utils]>=10.0.55",
+    "build>=1.3.0",
+    "cart>=1.2.3",
+    "pytest>=9.0.2",
+    "ruff>=0.15.8",
+    "tox>=4.34.1",
+    "tox-uv>=1.0",
+    "ty>=0.0.27",
+]
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.version.raw-options]
+version_scheme = "only-version"
+
+[tool.hatch.version.fallback]
+version = "0.0.0"
+
+[tool.hatch.build.targets.wheel]
+packages = ["azul_plugin_mobile_evasion"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/azul_plugin_mobile_evasion",
+    "/tests",
+    "/README.md",
+    "/LICENSE",
+    "/pyproject.toml",
+]
+
+[tool.ruff]
+line-length = 119
+indent-width = 4
+target-version = "py312"
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".tox",
+    ".venv",
+    "build",
+    "dist",
+]
+
+[tool.ruff.lint]
+select = [
+  "I",
+  "E4",
+  "E7",
+  "E9",
+  "F",
+  "B",
+  "D",
+  "S",
+]
+ignore = ["B008", "D104", "D107"]
+exclude = [
+    "tests/*",
+]
+fixable = ["ALL"]
+unfixable = []
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.format]
+docstring-code-format = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
