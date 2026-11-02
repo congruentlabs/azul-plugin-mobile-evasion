@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.12"
 resolution-markers = [
     "python_full_version >= '3.14'",
@@ -120,7 +120,7 @@ dev = [
 
 [[package]]
 name = "azul-runner"
-version = "10.0.55"
+version = "13.0.109"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "azul-bedrock" },
@@ -132,9 +132,9 @@ dependencies = [
     { name = "pydantic-settings" },
     { name = "watchdog" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b1/ae/f7c6253772151dbe4d0c2d4262facf0fc762acb16eba9207c42e7bb533fb/azul_runner-10.0.55.tar.gz", hash = "sha256:c188b3ad8141173d9d9777ff232efa3e250839d161d6acbf60b32ec247bfe3dd", size = 141360, upload-time = "2026-03-13T03:08:49.246Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/52/be/4edaaf9d43687f987600cad54cfcd9a3a4272fa278651a453a4eb097f4da/azul_runner-13.0.109.tar.gz", hash = "sha256:94a99eb1fd3bc5a993ddcad56e2c98072de0d9c415962b20b42fe06b282243ca", size = 311573, upload-time = "2026-11-02T00:04:57.998Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/47/d7/7e6d0d5f1aa73292f1a12ca95cc2884ac2da4a86e1dddef00c2cb2cc35fa/azul_runner-10.0.55-py3-none-any.whl", hash = "sha256:170c28a7c27031197573a539a1e1cbaae1c194ab886ca3576414053aa49672f5", size = 66842, upload-time = "2026-03-13T03:08:47.403Z" },
+    { url = "https://files.pythonhosted.org/packages/43/33/0ff23214a2d8562d4fe00a68d4e22ac6e360dc0e4dd5e23ae1f35b1b3e2e/azul_runner-13.0.109-py3-none-any.whl", hash = "sha256:e86cfcc85956c27f8c1a604073b6ca31545699ca755072c9a9132051d6afe7c2", size = 77243, upload-time = "2026-11-02T00:04:56.118Z" },
 ]
 
 [package.optional-dependencies]
